@@ -18,6 +18,7 @@ import {
   BottomTabNavigationProp,
   RootNavigationProp,
 } from '../../../types/navigationType';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -142,7 +143,10 @@ const Home = () => {
 
   const openJoinModal = match => {
     setSelectedMatch(match);
+    setIsSeeAllVisible(false);
+    // setTimeout(() => {
     setIsJoinModalVisible(true);
+    // }, 300);
   };
 
   const handleJoinMatch = () => {
@@ -154,14 +158,15 @@ const Home = () => {
   };
 
   const handleClaimReward = () => {
-    alert('Reward claimed! Get 1 free entry on your next match.');
+    // alert('Reward claimed! Get 1 free entry on your next match.');
     setIsRewardModalVisible(false);
   };
 
   const renderMatchCard = ({ item }) => (
     <TouchableOpacity
       style={styles.matchCard}
-      onPress={() => openJoinModal(item)}
+      // onPress={() => openJoinModal(item)}
+      onPress={() => navigation.navigate('MatchDetail', { id: 10 })}
     >
       <View style={styles.matchCardHeader}>
         <View style={styles.matchImageContainer}>
@@ -209,7 +214,11 @@ const Home = () => {
             {item.slotsLeft}/{item.totalSlots} spots left
           </Text>
         </View>
-        <TouchableOpacity style={styles.joinButton}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('MatchDetail', { id: 10 })}
+          // onPress={() => openJoinModal(item)}
+          style={styles.joinButton}
+        >
           <Text style={styles.joinButtonText}>Join</Text>
         </TouchableOpacity>
       </View>
@@ -729,14 +738,16 @@ const Home = () => {
       <View style={styles.bottomSpacing} />
     </View>
   );
-
+  const { top } = useSafeAreaInsets();
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
       <View
         style={[
           styles.topBar,
+
           {
+            marginTop: top,
             paddingHorizontal: 20,
             paddingTop: Platform.OS === 'ios' ? 40 : 20,
           },

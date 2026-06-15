@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import { RootNavigationProp } from '../../../types/navigationType';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const OTPVerify = () => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -85,7 +86,7 @@ const OTPVerify = () => {
     setTimeout(() => {
       setIsVerifying(false);
       if (code === '123456') {
-        alert('OTP Verified Successfully!');
+        // alert('OTP Verified Successfully!');
         setIsModalVisible(false);
         setOtp(['', '', '', '', '', '']);
         setTimeLeft(60);
@@ -102,7 +103,7 @@ const OTPVerify = () => {
     if (!canResend) return;
 
     // Simulate resend API call
-    alert('Verification code resent to your mobile number!');
+    // alert('Verification code resent to your mobile number!');
     setTimeLeft(60);
     setCanResend(false);
     setOtp(['', '', '', '', '', '']);
@@ -112,7 +113,7 @@ const OTPVerify = () => {
 
   const handleEditNumber = () => {
     setIsModalVisible(false);
-    alert('Edit phone number functionality');
+    // alert('Edit phone number functionality');
   };
 
   const renderOtpInputs = () => {
@@ -227,9 +228,9 @@ const OTPVerify = () => {
       </TouchableWithoutFeedback>
     </Modal>
   );
-
+  const { top } = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: top }]}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
 
       {/* Main Screen Content */}

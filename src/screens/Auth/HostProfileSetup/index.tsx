@@ -1,4 +1,5 @@
 // HostProfileSetup.js
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
   View,
@@ -13,8 +14,11 @@ import {
   Keyboard,
   ScrollView,
   Modal,
+  Image,
 } from 'react-native';
-
+import { RootNavigationProp } from '../../../types/navigationType';
+import ImagePicker from 'react-native-image-crop-picker';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // ==================== 2.1 Host Profile Setup Screen ====================
 const HostProfileSetupScreen = ({ onSubmit }) => {
   const [profileImage, setProfileImage] = useState(null);
@@ -24,8 +28,8 @@ const HostProfileSetupScreen = ({ onSubmit }) => {
   const [groundName, setGroundName] = useState('');
   const [city, setCity] = useState('');
   const [isUploading, setIsUploading] = useState(false);
-
-  const formatCNIC = (text) => {
+  const [image, setImage] = useState('');
+  const formatCNIC = text => {
     let cleaned = text.replace(/[^0-9]/g, '');
     let formatted = '';
     if (cleaned.length <= 5) {
@@ -33,40 +37,61 @@ const HostProfileSetupScreen = ({ onSubmit }) => {
     } else if (cleaned.length <= 12) {
       formatted = cleaned.slice(0, 5) + '-' + cleaned.slice(5);
     } else {
-      formatted = cleaned.slice(0, 5) + '-' + cleaned.slice(5, 12) + '-' + cleaned.slice(12, 13);
+      formatted =
+        cleaned.slice(0, 5) +
+        '-' +
+        cleaned.slice(5, 12) +
+        '-' +
+        cleaned.slice(12, 13);
     }
     setCnic(formatted.slice(0, 15));
   };
 
   const handleImageUpload = () => {
-    setIsUploading(true);
-    setTimeout(() => {
-      setProfileImage('avatar');
-      setIsUploading(false);
-    }, 1000);
+    // setIsUploading(true);
+    // // Simulate image upload
+    // setTimeout(() => {
+    //   setProfileImage('https://via.placeholder.com/150');
+    //   setIsUploading(false);
+    // }, 1000);
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+    }).then(image => {
+      console.log(image);
+      setImage(image.path);
+    });
   };
+  // const handleImageUpload = () => {
+  //   setIsUploading(true);
+  //   setTimeout(() => {
+  //     setProfileImage('avatar');
+  //     setIsUploading(false);
+  //   }, 1000);
+  // };
 
   const handleSubmit = () => {
-    if (!profileImage) {
-      alert('Please upload a profile image');
-      return;
-    }
-    if (!fullName.trim()) {
-      alert('Please enter your full name');
-      return;
-    }
-    if (!phone.trim()) {
-      alert('Please enter your phone number');
-      return;
-    }
-    if (!cnic.trim() || cnic.replace(/-/g, '').length < 13) {
-      alert('Please enter a valid CNIC number (13 digits)');
-      return;
-    }
-    if (!city.trim()) {
-      alert('Please enter your city/location');
-      return;
-    }
+    // if (!profileImage) {
+    //   alert('Please upload a profile image');
+    //   return;
+    // }
+    // if (!fullName.trim()) {
+    //   // alert('Please enter your full name');
+    //   return;
+    // }
+    // if (!phone.trim()) {
+    //   // alert('Please enter your phone number');
+    //   return;
+    // }
+    // if (!cnic.trim() || cnic.replace(/-/g, '').length < 13) {
+    //   // alert('Please enter a valid CNIC number (13 digits)');
+    //   return;
+    // }
+    // if (!city.trim()) {
+    //   // alert('Please enter your city/location');
+    //   return;
+    // }
 
     onSubmit({
       profileImage,
@@ -77,7 +102,7 @@ const HostProfileSetupScreen = ({ onSubmit }) => {
       city,
     });
   };
-
+  const { top } = useSafeAreaInsets();
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -85,9 +110,12 @@ const HostProfileSetupScreen = ({ onSubmit }) => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <StatusBar barStyle="light-content" backgroundColor="#000000" />
-        
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <View style={styles.content}>
+
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+        >
+          <View style={[styles.content, { paddingTop: top }]}>
             {/* Header */}
             <View style={styles.headerContainer}>
               <TouchableOpacity style={styles.backButton}>
@@ -108,7 +136,9 @@ const HostProfileSetupScreen = ({ onSubmit }) => {
                   <Text style={styles.progressDotText}>2</Text>
                 </View>
               </View>
-              <Text style={styles.progressText}>Step 1 of 1: Verification Info</Text>
+              <Text style={styles.progressText}>
+                Step 1 of 1: Verification Info
+              </Text>
             </View>
 
             {/* Profile Image Upload */}
@@ -118,10 +148,14 @@ const HostProfileSetupScreen = ({ onSubmit }) => {
                 onPress={handleImageUpload}
                 disabled={isUploading}
               >
-                {profileImage ? (
+                {image ? (
                   <View style={styles.profileImageContainer}>
                     <View style={styles.profileImagePlaceholder}>
-                      <Text style={styles.profileImageEmoji}>🧑‍💼</Text>
+                      <Image
+                        source={{ uri: image }}
+                        style={{ width: 120, height: 120, borderRadius: 60 }}
+                      />
+                      {/* <Text style={styles.profileImageEmoji}>🧑‍💼</Text> */}
                     </View>
                     <View style={styles.editBadge}>
                       <Text style={styles.editBadgeText}>✎</Text>
@@ -133,11 +167,13 @@ const HostProfileSetupScreen = ({ onSubmit }) => {
                     <Text style={styles.uploadText}>
                       {isUploading ? 'Uploading...' : 'Upload Photo'}
                     </Text>
-                    <Text style={styles.uploadSubtext}>JPG, PNG up to 5MB</Text>
+                    <Text style={styles.uploadSubtext}>JPG, PNG </Text>
                   </View>
                 )}
               </TouchableOpacity>
-              <Text style={styles.imageHint}>Profile picture required for verification</Text>
+              <Text style={styles.imageHint}>
+                Profile picture required for verification
+              </Text>
             </View>
 
             {/* Form Fields */}
@@ -185,7 +221,9 @@ const HostProfileSetupScreen = ({ onSubmit }) => {
                     maxLength={15}
                   />
                 </View>
-                <Text style={styles.hintText}>For trust & verification purposes</Text>
+                <Text style={styles.hintText}>
+                  For trust & verification purposes
+                </Text>
               </View>
 
               <View style={styles.inputWrapper}>
@@ -219,12 +257,18 @@ const HostProfileSetupScreen = ({ onSubmit }) => {
               <View style={styles.noteContainer}>
                 <Text style={styles.noteIcon}>⚠️</Text>
                 <Text style={styles.noteText}>
-                  Your information will be verified by our team. This helps maintain trust in our community.
+                  Your information will be verified by our team. This helps
+                  maintain trust in our community.
                 </Text>
               </View>
 
-              <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                <Text style={styles.submitButtonText}>Submit for Approval →</Text>
+              <TouchableOpacity
+                style={styles.submitButton}
+                onPress={handleSubmit}
+              >
+                <Text style={styles.submitButtonText}>
+                  Submit for Approval →
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -246,9 +290,10 @@ const ApprovalPendingScreen = ({ onEditProfile, onContactSupport }) => (
       </View>
       <Text style={styles.statusTitle}>Your account is under review</Text>
       <Text style={styles.statusDescription}>
-        Admin will approve your account before you can create matches. This usually takes 24-48 hours.
+        Admin will approve your account before you can create matches. This
+        usually takes 24-48 hours.
       </Text>
-      
+
       <View style={styles.statusTimeline}>
         <View style={styles.timelineItem}>
           <View style={[styles.timelineDot, styles.timelineDotCompleted]}>
@@ -256,7 +301,9 @@ const ApprovalPendingScreen = ({ onEditProfile, onContactSupport }) => (
           </View>
           <View>
             <Text style={styles.timelineTitle}>Profile Submitted</Text>
-            <Text style={styles.timelineDesc}>Your information has been received</Text>
+            <Text style={styles.timelineDesc}>
+              Your information has been received
+            </Text>
           </View>
         </View>
         <View style={styles.timelineLine} />
@@ -266,7 +313,9 @@ const ApprovalPendingScreen = ({ onEditProfile, onContactSupport }) => (
           </View>
           <View>
             <Text style={styles.timelineTitle}>Under Review</Text>
-            <Text style={styles.timelineDesc}>Admin is verifying your details</Text>
+            <Text style={styles.timelineDesc}>
+              Admin is verifying your details
+            </Text>
           </View>
         </View>
         <View style={styles.timelineLine} />
@@ -276,7 +325,9 @@ const ApprovalPendingScreen = ({ onEditProfile, onContactSupport }) => (
           </View>
           <View>
             <Text style={styles.timelineTitle}>Approval</Text>
-            <Text style={styles.timelineDesc}>You'll be notified once approved</Text>
+            <Text style={styles.timelineDesc}>
+              You'll be notified once approved
+            </Text>
           </View>
         </View>
       </View>
@@ -285,7 +336,10 @@ const ApprovalPendingScreen = ({ onEditProfile, onContactSupport }) => (
         <TouchableOpacity style={styles.editButton} onPress={onEditProfile}>
           <Text style={styles.editButtonText}>Edit Profile</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.supportButton} onPress={onContactSupport}>
+        <TouchableOpacity
+          style={styles.supportButton}
+          onPress={onContactSupport}
+        >
           <Text style={styles.supportButtonText}>Contact Support</Text>
         </TouchableOpacity>
       </View>
@@ -295,7 +349,10 @@ const ApprovalPendingScreen = ({ onEditProfile, onContactSupport }) => (
 
 // ==================== 2.3 Approval Rejected Screen ====================
 const ApprovalRejectedScreen = ({ rejectionReason, onResubmit }) => {
-  const [reason] = useState(rejectionReason || 'Incomplete information provided. Please check your CNIC and contact details.');
+  const [reason] = useState(
+    rejectionReason ||
+      'Incomplete information provided. Please check your CNIC and contact details.',
+  );
 
   return (
     <View style={styles.container}>
@@ -306,11 +363,14 @@ const ApprovalRejectedScreen = ({ rejectionReason, onResubmit }) => {
             <Text style={styles.rejectedIcon}>❌</Text>
           </View>
         </View>
-        <Text style={[styles.statusTitle, styles.rejectedTitle]}>Your request was rejected</Text>
-        <Text style={styles.statusDescription}>
-          Unfortunately, your host application could not be approved at this time.
+        <Text style={[styles.statusTitle, styles.rejectedTitle]}>
+          Your request was rejected
         </Text>
-        
+        <Text style={styles.statusDescription}>
+          Unfortunately, your host application could not be approved at this
+          time.
+        </Text>
+
         <View style={styles.reasonContainer}>
           <Text style={styles.reasonTitle}>Reason for rejection:</Text>
           <View style={styles.reasonBox}>
@@ -322,19 +382,27 @@ const ApprovalRejectedScreen = ({ rejectionReason, onResubmit }) => {
           <Text style={styles.suggestionsTitle}>📋 Suggestions to fix:</Text>
           <View style={styles.suggestionItem}>
             <Text style={styles.suggestionBullet}>•</Text>
-            <Text style={styles.suggestionText}>Ensure CNIC is clear and valid (13 digits)</Text>
+            <Text style={styles.suggestionText}>
+              Ensure CNIC is clear and valid (13 digits)
+            </Text>
           </View>
           <View style={styles.suggestionItem}>
             <Text style={styles.suggestionBullet}>•</Text>
-            <Text style={styles.suggestionText}>Provide accurate phone number for verification</Text>
+            <Text style={styles.suggestionText}>
+              Provide accurate phone number for verification
+            </Text>
           </View>
           <View style={styles.suggestionItem}>
             <Text style={styles.suggestionBullet}>•</Text>
-            <Text style={styles.suggestionText}>Upload a clear profile picture</Text>
+            <Text style={styles.suggestionText}>
+              Upload a clear profile picture
+            </Text>
           </View>
           <View style={styles.suggestionItem}>
             <Text style={styles.suggestionBullet}>•</Text>
-            <Text style={styles.suggestionText}>Enter valid city/location information</Text>
+            <Text style={styles.suggestionText}>
+              Enter valid city/location information
+            </Text>
           </View>
         </View>
 
@@ -346,8 +414,12 @@ const ApprovalRejectedScreen = ({ rejectionReason, onResubmit }) => {
   );
 };
 
+type Props = {
+  navigation: RootNavigationProp<'HostProfileSetup'>; // or whichever screen this is
+  onCreateFirstMatch?: () => void;
+};
 // ==================== 2.4 Approval Success Screen ====================
-const ApprovalSuccessScreen = ({ onCreateFirstMatch }) => (
+const ApprovalSuccessScreen = ({ onCreateFirstMatch, navigation }: Props) => (
   <View style={styles.container}>
     <StatusBar barStyle="light-content" backgroundColor="#000000" />
     <View style={styles.statusContainer}>
@@ -356,11 +428,14 @@ const ApprovalSuccessScreen = ({ onCreateFirstMatch }) => (
           <Text style={styles.successIcon}>✅</Text>
         </View>
       </View>
-      <Text style={[styles.statusTitle, styles.successTitle]}>You're now a verified host!</Text>
-      <Text style={styles.statusDescription}>
-        Congratulations! Your host account has been approved. You can now create matches and start earning.
+      <Text style={[styles.statusTitle, styles.successTitle]}>
+        You're now a verified host!
       </Text>
-      
+      <Text style={styles.statusDescription}>
+        Congratulations! Your host account has been approved. You can now create
+        matches and start earning.
+      </Text>
+
       <View style={styles.successCard}>
         <View style={styles.successCardHeader}>
           <Text style={styles.successCardIcon}>🎉</Text>
@@ -381,16 +456,24 @@ const ApprovalSuccessScreen = ({ onCreateFirstMatch }) => (
           </View>
           <View style={styles.successCardItem}>
             <Text style={styles.successCardCheck}>✓</Text>
-            <Text style={styles.successCardText}>Earn commission & rewards</Text>
+            <Text style={styles.successCardText}>
+              Earn commission & rewards
+            </Text>
           </View>
         </View>
       </View>
 
-      <TouchableOpacity style={styles.createMatchButton} onPress={onCreateFirstMatch}>
+      {/* <TouchableOpacity
+        style={styles.createMatchButton}
+        onPress={onCreateFirstMatch}
+      >
         <Text style={styles.createMatchButtonText}>Create First Match →</Text>
-      </TouchableOpacity>
-      
-      <TouchableOpacity style={styles.goHomeButton}>
+      </TouchableOpacity> */}
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate('HostTabs', { screen: 'HostHome' })}
+        style={styles.goHomeButton}
+      >
         <Text style={styles.goHomeButtonText}>Go to Dashboard</Text>
       </TouchableOpacity>
     </View>
@@ -401,15 +484,15 @@ const ApprovalSuccessScreen = ({ onCreateFirstMatch }) => (
 const HostProfileSetup = () => {
   const [step, setStep] = useState('setup'); // setup, pending, rejected, success
   const [submittedData, setSubmittedData] = useState(null);
-
-  const handleSubmit = (data) => {
+  const navigation = useNavigation<RootNavigationProp<'HostProfileSetup'>>();
+  const handleSubmit = data => {
     setSubmittedData(data);
     // Simulate API call for approval
     // For demo: randomly show success or rejected
     // In real app, this would be based on API response
     setTimeout(() => {
       // Demo: Show pending first, then can be changed
-      setStep('pending');
+      setStep('success');
     }, 1500);
   };
 
@@ -418,7 +501,7 @@ const HostProfileSetup = () => {
   };
 
   const handleContactSupport = () => {
-    alert('Contacting support: support@matchup.com\n+1 (555) 123-4567');
+    // alert('Contacting support: support@matchup.com\n+1 (555) 123-4567');
   };
 
   const handleResubmit = () => {
@@ -426,7 +509,7 @@ const HostProfileSetup = () => {
   };
 
   const handleCreateFirstMatch = () => {
-    alert('Navigate to Create Match Screen');
+    // alert('Navigate to Create Match Screen');
   };
 
   // For demo purposes - show different states
@@ -439,12 +522,14 @@ const HostProfileSetup = () => {
   }
 
   if (showSuccess) {
-    return <ApprovalSuccessScreen onCreateFirstMatch={handleCreateFirstMatch} />;
+    return (
+      <ApprovalSuccessScreen onCreateFirstMatch={handleCreateFirstMatch} />
+    );
   }
 
   if (step === 'pending') {
     return (
-      <ApprovalPendingScreen 
+      <ApprovalPendingScreen
         onEditProfile={handleEditProfile}
         onContactSupport={handleContactSupport}
       />
@@ -456,7 +541,12 @@ const HostProfileSetup = () => {
   }
 
   if (step === 'success') {
-    return <ApprovalSuccessScreen onCreateFirstMatch={handleCreateFirstMatch} />;
+    return (
+      <ApprovalSuccessScreen
+        onCreateFirstMatch={handleCreateFirstMatch}
+        navigation={navigation}
+      />
+    );
   }
 
   return <HostProfileSetupScreen onSubmit={handleSubmit} />;

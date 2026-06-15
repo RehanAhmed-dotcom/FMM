@@ -506,15 +506,19 @@ import {
 } from 'react-native';
 import { RootNavigationProp } from '../../../types/navigationType';
 import { useNavigation } from '@react-navigation/native';
+import AlertModal from '../../../component/AlertModal';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Screen 1: Request Reset Code
-const RequestResetScreen = ({ onNext, onBackToLogin }) => {
+const RequestResetScreen = ({ onNext, onBackToLogin, openModal }) => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSendCode = () => {
     if (!email) {
-      alert('Please enter your email or phone number');
+      openModal();
+      // alert('Please enter your email');
+      // setAlertShow(true);
       return;
     }
     setIsLoading(true);
@@ -523,9 +527,9 @@ const RequestResetScreen = ({ onNext, onBackToLogin }) => {
       onNext(email);
     }, 1000);
   };
-
+  const { top } = useSafeAreaInsets();
   return (
-    <View style={styles.screenContainer}>
+    <View style={[styles.screenContainer, { top }]}>
       <TouchableOpacity onPress={onBackToLogin} style={styles.backButton}>
         <Text style={styles.backButtonText}>← Back</Text>
       </TouchableOpacity>
@@ -575,7 +579,13 @@ const RequestResetScreen = ({ onNext, onBackToLogin }) => {
 };
 
 // Screen 2: Verify Code & Reset Password
-const VerifyResetScreen = ({ email, onComplete, onBack, navigation }) => {
+const VerifyResetScreen = ({
+  email,
+  onComplete,
+  onBack,
+  navigation,
+  openModal,
+}) => {
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -607,7 +617,9 @@ const VerifyResetScreen = ({ email, onComplete, onBack, navigation }) => {
   const handleResetPassword = () => {
     const verificationCode = code.join('');
     if (verificationCode.length !== 6) {
-      alert('Please enter the 6-digit verification code');
+      // alert('Please enter the 6-digit verification code');
+      openModal(true);
+      // setAlertShow(true);
       return;
     }
     navigation.navigate('NewPassword');
@@ -649,8 +661,9 @@ const VerifyResetScreen = ({ email, onComplete, onBack, navigation }) => {
     const masked = '*'.repeat(user?.length - 3) + user?.slice(-3);
     return `${masked}@${domain}`;
   };
+  const { top } = useSafeAreaInsets();
   return (
-    <View style={styles.screenContainer}>
+    <View style={[styles.screenContainer, { top }]}>
       <TouchableOpacity onPress={onBack} style={styles.backButton}>
         <Text style={styles.backButtonText}>← Back</Text>
       </TouchableOpacity>
@@ -694,7 +707,7 @@ const VerifyResetScreen = ({ email, onComplete, onBack, navigation }) => {
 
           <TouchableOpacity
             style={styles.resendContainer}
-            onPress={() => alert('Code resent!')}
+            // onPress={() => alert('Code resent!')}
           >
             <Text style={styles.resendText}>
               Didn't receive the code?{' '}
@@ -712,6 +725,10 @@ const EmailAndCode = () => {
   const [step, setStep] = useState(1);
   const [userEmail, setUserEmail] = useState('');
   const navigation = useNavigation<RootNavigationProp<'EmailAndCode'>>();
+  const [alertShow, setAlertShow] = useState(false);
+  const close = () => {
+    setAlertShow(false);
+  };
 
   const handleSendCode = (email: string) => {
     setUserEmail(email);
@@ -719,13 +736,16 @@ const EmailAndCode = () => {
   };
 
   const handleComplete = () => {
-    alert('Returning to Login');
+    // alert('Returning to Login');
   };
 
   const handleBackToLogin = () => {
-    alert('Back to Login');
+    // alert('Back to Login');
+    navigation.goBack();
   };
-
+  const openModal = () => {
+    setAlertShow(true);
+  };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -738,6 +758,7 @@ const EmailAndCode = () => {
           <RequestResetScreen
             onNext={handleSendCode}
             onBackToLogin={handleBackToLogin}
+            openModal={openModal}
           />
         ) : (
           <VerifyResetScreen
@@ -745,8 +766,15 @@ const EmailAndCode = () => {
             onComplete={handleComplete}
             onBack={() => setStep(1)}
             navigation={navigation}
+            openModal={openModal}
           />
         )}
+        <AlertModal
+          value={alertShow}
+          close={close}
+          bigText={'Warning'}
+          text={'Enter Detail'}
+        />
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );

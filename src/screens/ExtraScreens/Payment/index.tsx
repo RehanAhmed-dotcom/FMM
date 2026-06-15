@@ -13,6 +13,7 @@ import {
   Platform,
 } from 'react-native';
 import { RootNavigationProp } from '../../../types/navigationType';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Payment = () => {
   // Mock match data (would come from route params in real app)
@@ -62,32 +63,32 @@ const Payment = () => {
 
   const handlePayment = () => {
     if (selectedMethod === 'card') {
-      if (!cardNumber || cardNumber.replace(/\s/g, '').length < 16) {
-        alert('Please enter a valid card number');
-        return;
-      }
-      if (!cardName) {
-        alert('Please enter cardholder name');
-        return;
-      }
-      if (!expiryDate || expiryDate.length < 5) {
-        alert('Please enter valid expiry date');
-        return;
-      }
-      if (!cvv || cvv.length < 3) {
-        alert('Please enter valid CVV');
-        return;
-      }
+      // if (!cardNumber || cardNumber.replace(/\s/g, '').length < 16) {
+      //   alert('Please enter a valid card number');
+      //   return;
+      // }
+      // if (!cardName) {
+      //   alert('Please enter cardholder name');
+      //   return;
+      // }
+      // if (!expiryDate || expiryDate.length < 5) {
+      //   alert('Please enter valid expiry date');
+      //   return;
+      // }
+      // if (!cvv || cvv.length < 3) {
+      //   alert('Please enter valid CVV');
+      //   return;
+      // }
     }
 
-    if (
-      selectedMethod === 'wallet' &&
-      useWallet &&
-      walletBalance < matchData.totalAmount
-    ) {
-      alert('Insufficient wallet balance');
-      return;
-    }
+    // if (
+    //   selectedMethod === 'wallet' &&
+    //   useWallet &&
+    //   walletBalance < matchData.totalAmount
+    // ) {
+    //   // alert('Insufficient wallet balance');
+    //   return;
+    // }
 
     setIsProcessing(true);
     setTimeout(() => {
@@ -180,9 +181,9 @@ const Payment = () => {
       </View>
     </Modal>
   );
-
+  const { top } = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: top }]}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
 
       <View style={styles.header}>

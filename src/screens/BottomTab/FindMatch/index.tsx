@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { RootNavigationProp } from '../../../types/navigationType';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const FindMatch = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -438,7 +439,10 @@ const FindMatch = () => {
             {item.slotsLeft}/{item.totalSlots} spots
           </Text>
         </View>
-        <TouchableOpacity style={styles.detailsButton}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('MatchDetail', { id: 10 })}
+          style={styles.detailsButton}
+        >
           <Text style={styles.detailsButtonText}>View Details →</Text>
         </TouchableOpacity>
       </View>
@@ -831,16 +835,10 @@ const FindMatch = () => {
                 </View>
 
                 <View style={styles.detailActions}>
-                  <TouchableOpacity
-                    style={styles.saveMatchButton}
-                    onPress={() => alert('Match saved to favorites!')}
-                  >
+                  <TouchableOpacity style={styles.saveMatchButton}>
                     <Text style={styles.saveMatchButtonText}>❤️ Save</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.joinNowButton}
-                    onPress={() => alert(`Joining ${selectedMatch.title}`)}
-                  >
+                  <TouchableOpacity style={styles.joinNowButton}>
                     <Text style={styles.joinNowButtonText}>Join Now →</Text>
                   </TouchableOpacity>
                 </View>
@@ -869,9 +867,9 @@ const FindMatch = () => {
   );
 
   const filteredMatches = getFilteredMatches();
-
+  const { top } = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: top }]}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
       <View
         style={[

@@ -10,6 +10,7 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Leaderboard = () => {
   const [activeTab, setActiveTab] = useState('leaderboard');
@@ -258,7 +259,7 @@ const Leaderboard = () => {
 
   const handleUseReward = () => {
     setShowUnlockModal(false);
-    alert('Free match unlocked! Use it on your next payment.');
+    // alert('Free match unlocked! Use it on your next payment.');
   };
 
   // Top 3 Card Component
@@ -499,9 +500,9 @@ const Leaderboard = () => {
       />
     </>
   );
-
+  const { top } = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: top }]}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
 
       {/* Header */}

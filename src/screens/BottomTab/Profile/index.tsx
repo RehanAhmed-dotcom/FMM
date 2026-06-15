@@ -15,6 +15,7 @@ import { RootNavigationProp } from '../../../types/navigationType';
 import { useNavigation } from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Logout from '../../../component/Logout';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('matches');
   const [selectedMatch, setSelectedMatch] = useState(null);
@@ -287,12 +288,15 @@ const Profile = () => {
   };
 
   const openMatchDetail = match => {
-    setSelectedMatch(match);
-    setIsMatchModalVisible(true);
+    // setSelectedMatch(match);
+    console.log('Opening reward detail for:', match);
+    // setIsMatchModalVisible(true);
+    navigation.navigate('MatchDetail', { id: 10 });
   };
 
   const openRewardDetail = reward => {
     setSelectedReward(reward);
+    console.log('Opening reward detail for:', reward);
     setIsRewardModalVisible(true);
   };
 
@@ -828,9 +832,9 @@ const Profile = () => {
       </View>
     </View>
   );
-
+  const { top } = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: top }]}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
 
       {renderHeader()}

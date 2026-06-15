@@ -47,13 +47,13 @@ const Selection = () => {
   ];
 
   const handleContinue = () => {
-    if (!selectedRole) {
-      alert('Please select a role to continue');
-      return;
-    }
-    alert(
-      `You selected: ${selectedRole.toUpperCase()} role!\nProceeding to ${selectedRole} dashboard...`,
-    );
+    // if (!selectedRole) {
+    //   alert('Please select a role to continue');
+    //   return;
+    // }
+    // alert(
+    //   `You selected: ${selectedRole.toUpperCase()} role!\nProceeding to ${selectedRole} dashboard...`,
+    // );
   };
 
   const RoleCard = ({ role, isSelected }) => (

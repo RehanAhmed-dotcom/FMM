@@ -13,22 +13,43 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  Modal,
 } from 'react-native';
 import Apple from 'react-native-vector-icons/FontAwesome';
 import { RootNavigationProp } from '../../../types/navigationType';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const HostLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [visible, setVisible] = useState(false);
   const navigation = useNavigation<RootNavigationProp<'HostLogin'>>();
   const handleLogin = () => {
     // Handle login logic here
     // alert('Login pressed');
-    navigation.navigate('MyTabs', { screen: 'Home' });
+    navigation.navigate('HostTabs', { screen: 'HostHome' });
   };
+  const ComingModal = () => {
+    return (
+      <Modal transparent visible={visible} animationType="fade">
+        <View style={styles.overlay}>
+          <View style={styles.alertBox}>
+            <Text style={styles.title}>Warning</Text>
+            <Text style={styles.message}>This module is coming soon!</Text>
 
+            <TouchableOpacity
+              onPress={() => setVisible(false)}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
   const handleForgotPassword = () => {
     // alert('Forgot Password pressed');
     navigation.navigate('EmailAndCode');
@@ -36,12 +57,13 @@ const HostLogin = () => {
 
   const handleGoogleLogin = () => {
     // alert('Google Login pressed');
+    setVisible(true);
   };
 
   const handleAppleLogin = () => {
     // alert('Apple Login pressed');
   };
-
+  const { top } = useSafeAreaInsets();
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -50,7 +72,7 @@ const HostLogin = () => {
       >
         <StatusBar barStyle="light-content" backgroundColor="#000000" />
 
-        <View style={styles.content}>
+        <View style={[styles.content, { paddingTop: top }]}>
           {/* Header Section */}
           <View style={styles.headerContainer}>
             <View style={styles.logoContainer}>
@@ -150,7 +172,7 @@ const HostLogin = () => {
 
                 <TouchableOpacity
                   style={[styles.socialButton, styles.appleButton]}
-                  onPress={handleAppleLogin}
+                  onPress={() => setVisible(true)}
                 >
                   <View style={styles.socialIconContainer}>
                     <Apple name={'apple'} size={20} color={'white'} />
@@ -173,6 +195,7 @@ const HostLogin = () => {
             </View>
           </ScrollView>
         </View>
+        <ComingModal />
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
@@ -286,9 +309,39 @@ const styles = StyleSheet.create({
       width: 0,
       height: 4,
     },
+
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5,
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  alertBox: {
+    width: '80%',
+    backgroundColor: '#000',
+    padding: 20,
+    borderRadius: 12,
+  },
+  title: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  message: {
+    color: '#fff',
+    marginTop: 10,
+  },
+  button: {
+    marginTop: 20,
+    alignSelf: 'flex-end',
+  },
+  buttonText: {
+    color: '#4da6ff',
+    fontWeight: '600',
   },
   loginButtonText: {
     color: '#FFFFFF',

@@ -27,6 +27,7 @@ import {
 } from 'react-native';
 import { RootNavigationProp } from '../../../types/navigationType';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width, height } = Dimensions.get('window');
 
@@ -339,7 +340,7 @@ const RoleSelectionScreen = ({ onSelectRole, navigation }) => {
 
   const handleContinue = () => {
     if (!selectedRole) {
-      alert('Please select a role to continue');
+      // alert('Please select a role to continue');
       return;
     }
     if (selectedRole == 'host') {
@@ -377,12 +378,12 @@ const RoleSelectionScreen = ({ onSelectRole, navigation }) => {
       )}
     </TouchableOpacity>
   );
-
+  const { top } = useSafeAreaInsets();
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
       <ScrollView>
-        <View style={styles.roleHeader}>
+        <View style={[styles.roleHeader, { marginTop: top }]}>
           <Text style={styles.roleHeaderTitle}>
             How do you want to continue?
           </Text>
@@ -428,14 +429,18 @@ const OnBoarding = () => {
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [showRoleSelection, setShowRoleSelection] = useState(true);
   const navigation = useNavigation<RootNavigationProp<'OnBoarding'>>();
+  const [alertShow, setAlertShow] = useState(false);
+  const close = () => {
+    setAlertShow(false);
+  };
   const handleOnboardingFinish = () => {
     setShowOnboarding(false);
   };
 
   const handleRoleSelect = role => {
-    alert(
-      `Selected role: ${role.toUpperCase()}\nNavigating to ${role} dashboard...`,
-    );
+    // alert(
+    //   `Selected role: ${role.toUpperCase()}\nNavigating to ${role} dashboard...`,
+    // );
     setShowRoleSelection(false);
   };
 
@@ -850,8 +855,8 @@ const styles = StyleSheet.create({
   featureChipIcon: {
     fontSize: 16,
     // backgroundColor: 'red',
-    height: 20,
-    width: 15,
+    // height: 20,
+    // width: 15,
   },
   featureChipText: {
     fontSize: 13,

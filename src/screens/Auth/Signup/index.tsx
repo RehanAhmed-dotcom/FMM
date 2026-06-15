@@ -16,10 +16,13 @@ import {
 import Apple from 'react-native-vector-icons/FontAwesome';
 import { RootNavigationProp } from '../../../types/navigationType';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Signup = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
+  const [dob, setDob] = useState('');
+  const [gender, setGender] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -39,12 +42,13 @@ const Signup = () => {
   };
 
   const handleGoogleSignup = () => {
-    alert('Google Sign Up pressed');
+    // alert('Google Sign Up pressed');
   };
 
   const handleAppleSignup = () => {
-    alert('Apple Sign Up pressed');
+    // alert('Apple Sign Up pressed');
   };
+  const { top } = useSafeAreaInsets();
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -53,7 +57,7 @@ const Signup = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <StatusBar barStyle="light-content" backgroundColor="#000000" />
-        <View style={[styles.headerContainer]}>
+        <View style={[styles.headerContainer, { paddingTop: top }]}>
           <View style={styles.logoContainer}>
             <View style={styles.logo}>
               <Text style={styles.logoText}>⚡</Text>
@@ -147,6 +151,36 @@ const Signup = () => {
                     placeholderTextColor="#666666"
                     value={fullName}
                     onChangeText={setFullName}
+                    autoCapitalize="words"
+                    autoCorrect={false}
+                  />
+                </View>
+              </View>
+              <View style={styles.inputWrapper}>
+                <Text style={styles.inputLabel}>Date of Birth</Text>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.inputIcon}>👤</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Enter your Date of Birth"
+                    placeholderTextColor="#666666"
+                    value={dob}
+                    onChangeText={setDob}
+                    autoCapitalize="words"
+                    autoCorrect={false}
+                  />
+                </View>
+              </View>
+              <View style={styles.inputWrapper}>
+                <Text style={styles.inputLabel}>Gender</Text>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.inputIcon}>👤</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Enter your Gender"
+                    placeholderTextColor="#666666"
+                    value={gender}
+                    onChangeText={setGender}
                     autoCapitalize="words"
                     autoCorrect={false}
                   />

@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { RootNavigationProp } from '../../../types/navigationType';
 import { Dimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const screenWidth = Dimensions.get('window').width;
 const MatchDetail = () => {
   const [selectedMatch, setSelectedMatch] = useState(null);
@@ -142,10 +143,10 @@ const MatchDetail = () => {
     setSelectedSlots([slotNumber]);
   };
   const handleContinue = () => {
-    if (selectedSlots.length === 0) {
-      alert('Please select at least one slot');
-      return;
-    }
+    // if (selectedSlots.length === 0) {
+    //   alert('Please select at least one slot');
+    //   return;
+    // }
     setIsJoining(true);
     setTimeout(() => {
       setIsJoining(false);
@@ -370,9 +371,9 @@ const MatchDetail = () => {
       </Modal>
     );
   };
-
+  const { top } = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: top }]}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
       <TouchableOpacity
         onPress={() => navigation.goBack()}

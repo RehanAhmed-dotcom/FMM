@@ -16,6 +16,8 @@ import {
   ScrollView,
 } from 'react-native';
 import { RootNavigationProp } from '../../../types/navigationType';
+import AlertModal from '../../../component/AlertModal';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const NewPassword = () => {
   const [newPassword, setNewPassword] = useState('');
@@ -30,6 +32,10 @@ const NewPassword = () => {
   const [hasLowercase, setHasLowercase] = useState(false);
   const [hasNumber, setHasNumber] = useState(false);
   const [hasSpecialChar, setHasSpecialChar] = useState(false);
+  const [alertShow, setAlertShow] = useState(false);
+  const close = () => {
+    setAlertShow(false);
+  };
 
   const checkPasswordStrength = password => {
     setHasMinLength(password.length >= 8);
@@ -60,15 +66,18 @@ const NewPassword = () => {
 
   const handleResetPassword = () => {
     if (!newPassword) {
-      alert('Please enter a new password');
+      // alert('Please enter a new password');
+      setAlertShow(true);
       return;
     }
     if (newPassword.length < 8) {
-      alert('Password must be at least 8 characters');
+      // alert('Password must be at least 8 characters');
+      setAlertShow(true);
       return;
     }
     if (newPassword !== confirmPassword) {
-      alert('Passwords do not match');
+      // alert('Passwords do not match');
+      setAlertShow(true);
       return;
     }
 
@@ -112,7 +121,7 @@ const NewPassword = () => {
     { id: '4', text: 'At least 1 number', met: hasNumber },
     { id: '5', text: 'At least 1 special character', met: hasSpecialChar },
   ];
-
+  const { top } = useSafeAreaInsets();
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -121,9 +130,12 @@ const NewPassword = () => {
       >
         <StatusBar barStyle="light-content" backgroundColor="#000000" />
 
-        <View style={styles.content}>
+        <View style={[styles.content, { top }]}>
           {/* Header Section */}
-          <TouchableOpacity style={styles.backButton}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backButton}
+          >
             <Text style={styles.backButtonText}>← Back</Text>
           </TouchableOpacity>
           <ScrollView>
@@ -285,6 +297,12 @@ const NewPassword = () => {
               </View>
             </View>
           </ScrollView>
+          <AlertModal
+            value={alertShow}
+            close={close}
+            bigText={'Warning'}
+            text={'Enter correct detail'}
+          />
         </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>

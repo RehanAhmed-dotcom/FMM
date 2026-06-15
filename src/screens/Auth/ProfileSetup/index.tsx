@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import { RootNavigationProp } from '../../../types/navigationType';
 import ImagePicker from 'react-native-image-crop-picker';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const ProfileSetup = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [name, setName] = useState('');
@@ -122,6 +123,7 @@ const ProfileSetup = () => {
       </Text>
     </TouchableOpacity>
   );
+  const { top } = useSafeAreaInsets();
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -131,7 +133,7 @@ const ProfileSetup = () => {
       >
         <StatusBar barStyle="light-content" backgroundColor="#000000" />
 
-        <View style={styles.content}>
+        <View style={[styles.content, { paddingTop: top }]}>
           {/* Header Section */}
           <TouchableOpacity style={styles.backButton}>
             <Text style={styles.backButtonText}>← Back</Text>
@@ -192,7 +194,7 @@ const ProfileSetup = () => {
                     <Text style={styles.uploadText}>
                       {isUploading ? 'Uploading...' : 'Upload Photo'}
                     </Text>
-                    <Text style={styles.uploadSubtext}>JPG, PNG up to 5MB</Text>
+                    <Text style={styles.uploadSubtext}>JPG, PNG </Text>
                   </View>
                 )}
               </TouchableOpacity>

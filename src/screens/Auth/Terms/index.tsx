@@ -102,25 +102,25 @@ const Terms = () => {
   );
 
   const handleAgree = () => {
-    if (!agreeChecked) {
-      alert(
-        'Please read and agree to the Terms of Service by checking the box above',
-      );
-      return;
-    }
-    alert('You have agreed to the Terms of Service');
+    // if (!agreeChecked) {
+    //   alert(
+    //     'Please read and agree to the Terms of Service by checking the box above',
+    //   );
+    //   return;
+    // }
+    // alert('You have agreed to the Terms of Service');
   };
 
   const handleDecline = () => {
-    alert('You have declined the Terms of Service');
+    // alert('You have declined the Terms of Service');
   };
 
   const handlePrint = () => {
-    alert('Print functionality would be implemented here');
+    // alert('Print functionality would be implemented here');
   };
 
   const handleDownload = () => {
-    alert('Download functionality would be implemented here');
+    // alert('Download functionality would be implemented here');
   };
 
   const renderHeader = () => (

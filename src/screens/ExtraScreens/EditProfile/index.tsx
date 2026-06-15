@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import { RootNavigationProp } from '../../../types/navigationType';
 import ImagePicker from 'react-native-image-crop-picker';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const EditProfile = () => {
   const [formData, setFormData] = useState({
     fullName: 'Alex Morgan',
@@ -419,7 +420,7 @@ const EditProfile = () => {
         return renderPersonalInfo();
     }
   };
-
+  const { top } = useSafeAreaInsets();
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -428,7 +429,7 @@ const EditProfile = () => {
       >
         <StatusBar barStyle="light-content" backgroundColor="#000000" />
 
-        <View style={styles.content}>
+        <View style={[styles.content, { paddingTop: top }]}>
           {/* Header */}
           <View style={styles.headerContainer}>
             <TouchableOpacity

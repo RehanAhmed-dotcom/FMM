@@ -15,45 +15,63 @@ import {
   ScrollView,
 } from 'react-native';
 import { RootNavigationProp } from '../../../types/navigationType';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import AlertModal from '../../../component/AlertModal';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const HostSignup = () => {
   const [fullName, setFullName] = useState('');
+  const [userName, setUserName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [cnic, setCnic] = useState('');
+  const [location, setLocation] = useState('');
+  const [bio, setBio] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
-const navigation = useNavigation<RootNavigationProp<"HostSignup">>();
+  const navigation = useNavigation<RootNavigationProp<'HostSignup'>>();
+  const [alertShow, setAlertShow] = useState(false);
+  const close = () => {
+    setAlertShow(false);
+  };
+
   const handleSignup = () => {
     if (!fullName.trim()) {
-      alert('Please enter your full name');
+      // alert('Please enter your full name');
+      setAlertShow(true);
       return;
     }
     if (!phone.trim()) {
-      alert('Please enter your phone number');
+      // alert('Please enter your phone number');
+      setAlertShow(true);
       return;
     }
     if (!email.trim()) {
-      alert('Please enter your email address');
+      // alert('Please enter your email address');
+      setAlertShow(true);
       return;
     }
     if (!password) {
-      alert('Please create a password');
+      // alert('Please create a password');
+      setAlertShow(true);
       return;
     }
-    if (password.length < 8) {
-      alert('Password must be at least 8 characters');
-      return;
-    }
+    // if (password.length < 8) {
+    //   alert('Password must be at least 8 characters');
+    //   return;
+    // }
     if (password !== confirmPassword) {
-      alert('Passwords do not match');
+      // alert('Passwords do not match');
+      setAlertShow(true);
       return;
     }
     if (!agreeToTerms) {
-      alert('Please agree to the Terms & Conditions');
+      // alert('Please agree to the Terms & Conditions');
+      setAlertShow(true);
       return;
     }
 
@@ -61,21 +79,21 @@ const navigation = useNavigation<RootNavigationProp<"HostSignup">>();
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
-      navigation.navigate('HostProfileSetup')
+      navigation.navigate('HostProfileSetup');
       // if (onSignup) onSignup('host');
     }, 1500);
   };
 
   const handleGoogleSignup = () => {
-    alert('Google Sign Up - Redirecting...');
+    // alert('Google Sign Up - Redirecting...');
     // if (onSocialSignup) onSocialSignup('google');
   };
 
   const handleAppleSignup = () => {
-    alert('Apple Sign Up - Redirecting...');
+    // alert('Apple Sign Up - Redirecting...');
     // if (onSocialSignup) onSocialSignup('apple');
   };
-
+  const { top } = useSafeAreaInsets();
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -93,7 +111,7 @@ const navigation = useNavigation<RootNavigationProp<"HostSignup">>();
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
         >
-          <View style={styles.content}>
+          <View style={[styles.content, { paddingTop: top }]}>
             {/* Header Section */}
             <View style={styles.headerContainer}>
               <TouchableOpacity style={styles.backButton}>
@@ -102,7 +120,8 @@ const navigation = useNavigation<RootNavigationProp<"HostSignup">>();
 
               <View style={styles.logoContainer}>
                 <View style={styles.logoInner}>
-                  <Text style={styles.logoEmoji}>🧑‍💼</Text>
+                  <AntDesign name="user" size={30} color={'white'} />
+                  {/* <Text style={styles.logoEmoji}>🧑‍💼</Text> */}
                 </View>
                 <View style={styles.logoRing} />
                 <View style={styles.logoBadge}>
@@ -130,6 +149,21 @@ const navigation = useNavigation<RootNavigationProp<"HostSignup">>();
                     placeholderTextColor="#666666"
                     value={fullName}
                     onChangeText={setFullName}
+                    autoCapitalize="words"
+                    autoCorrect={false}
+                  />
+                </View>
+              </View>
+              <View style={styles.inputWrapper}>
+                <Text style={styles.inputLabel}>User Name</Text>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.inputIcon}>👤</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="John Doe"
+                    placeholderTextColor="#666666"
+                    value={userName}
+                    onChangeText={setUserName}
                     autoCapitalize="words"
                     autoCorrect={false}
                   />
@@ -163,6 +197,54 @@ const navigation = useNavigation<RootNavigationProp<"HostSignup">>();
                     placeholderTextColor="#666666"
                     value={email}
                     onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                </View>
+              </View>
+              <View style={styles.inputWrapper}>
+                <Text style={styles.inputLabel}>CNIC</Text>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.inputIcon}>📧</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Enter your cnic"
+                    placeholderTextColor="#666666"
+                    value={cnic}
+                    onChangeText={setCnic}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                </View>
+              </View>
+              <View style={styles.inputWrapper}>
+                <Text style={styles.inputLabel}>Location</Text>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.inputIcon}>📧</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Enter your location"
+                    placeholderTextColor="#666666"
+                    value={location}
+                    onChangeText={setLocation}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                </View>
+              </View>
+              <View style={styles.inputWrapper}>
+                <Text style={styles.inputLabel}>Bio</Text>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.inputIcon}>📧</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Enter your bio"
+                    placeholderTextColor="#666666"
+                    value={bio}
+                    onChangeText={setBio}
                     keyboardType="email-address"
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -280,7 +362,7 @@ const navigation = useNavigation<RootNavigationProp<"HostSignup">>();
                   </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={[styles.socialButton, styles.appleButton]}
                   onPress={handleAppleSignup}
                 >
@@ -290,7 +372,7 @@ const navigation = useNavigation<RootNavigationProp<"HostSignup">>();
                   <Text style={styles.socialButtonText}>
                     Sign up with Apple
                   </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
 
               {/* Host Benefits Preview */}
@@ -331,13 +413,21 @@ const navigation = useNavigation<RootNavigationProp<"HostSignup">>();
                 <Text style={styles.loginText}>
                   Already have a host account?{' '}
                 </Text>
-                <TouchableOpacity onPress={() => alert('Switch to Login')}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('HostLogin')}
+                >
                   <Text style={styles.loginLink}>Sign In</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
         </ScrollView>
+        <AlertModal
+          value={alertShow}
+          close={close}
+          bigText={'Warning'}
+          text={'Enter details'}
+        />
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );

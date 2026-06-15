@@ -21,6 +21,11 @@ import EditProfile from '../screens/ExtraScreens/EditProfile';
 import HostLogin from '../screens/Auth/HostLogin';
 import HostSignup from '../screens/Auth/HostSignup';
 import HostProfileSetup from '../screens/Auth/HostProfileSetup';
+import HostTabs from './HostBottomTab';
+import HostCreateMatch from '../screens/ExtraScreens/Host/HostCreateMatch';
+import HostSingleMatchDetail from '../screens/ExtraScreens/Host/HostSingleMatchDetail';
+import HostManageMatch from '../screens/ExtraScreens/Host/HostManageMatch';
+import HostWithdraw from '../screens/ExtraScreens/Host/HostWithdraw';
 // export type RootStackParamList = {
 //   OnBoarding: undefined;
 // };
@@ -43,13 +48,21 @@ const Root = () => {
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
         <Stack.Screen name="MyTabs" component={MyTabs} />
+        <Stack.Screen name="HostTabs" component={HostTabs} />
         <Stack.Screen name="MatchDetail" component={MatchDetail} />
         <Stack.Screen name="Notifications" component={Notifications} />
         <Stack.Screen name="Payment" component={Payment} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
         <Stack.Screen name="HostLogin" component={HostLogin} />
         <Stack.Screen name="HostSignup" component={HostSignup} />
-        <Stack.Screen name='HostProfileSetup' component={HostProfileSetup}/>
+        <Stack.Screen name="HostProfileSetup" component={HostProfileSetup} />
+        <Stack.Screen name="HostCreateMatch" component={HostCreateMatch} />
+        <Stack.Screen name="HostManageMatch" component={HostManageMatch} />
+        <Stack.Screen name="HostWithdraw" component={HostWithdraw} />
+        <Stack.Screen
+          name="HostSingleMatchDetail"
+          component={HostSingleMatchDetail}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

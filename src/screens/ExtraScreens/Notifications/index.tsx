@@ -27,6 +27,7 @@ import {
   Platform,
 } from 'react-native';
 import { RootNavigationProp } from '../../../types/navigationType';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Notifications = () => {
   const [activeTab, setActiveTab] = useState('all');
@@ -286,9 +287,9 @@ const Notifications = () => {
   };
 
   const handleClaimReward = () => {
-    alert(
-      `Reward claimed! +${selectedNotification.detailData.amount} ${selectedNotification.detailData.rewardType} added to your account.`,
-    );
+    // alert(
+    //   `Reward claimed! +${selectedNotification.detailData.amount} ${selectedNotification.detailData.rewardType} added to your account.`,
+    // );
     setIsDetailModalVisible(false);
   };
 
@@ -304,46 +305,46 @@ const Notifications = () => {
   };
 
   const handleViewStats = () => {
-    alert(
-      `Viewing match statistics for ${selectedNotification.detailData.opponent}`,
-    );
+    // alert(
+    //   `Viewing match statistics for ${selectedNotification.detailData.opponent}`,
+    // );
     setIsDetailModalVisible(false);
   };
 
   const handleViewChallenge = () => {
-    alert(`Challenge: ${selectedNotification.detailData.title}`);
+    // alert(`Challenge: ${selectedNotification.detailData.title}`);
     setIsDetailModalVisible(false);
   };
 
   const handleViewBadges = () => {
-    alert(`Viewing your badge collection`);
+    // alert(`Viewing your badge collection`);
     setIsDetailModalVisible(false);
   };
 
   const handleRespondToInvite = response => {
-    alert(`${response} to join ${selectedNotification.detailData.teamName}`);
+    // alert(`${response} to join ${selectedNotification.detailData.teamName}`);
     setIsDetailModalVisible(false);
   };
 
   const handleClaimOffer = () => {
-    alert(
-      `Offer claimed! Use code: ${selectedNotification.detailData.code} at checkout.`,
-    );
+    // alert(
+    //   `Offer claimed! Use code: ${selectedNotification.detailData.code} at checkout.`,
+    // );
     setIsDetailModalVisible(false);
   };
 
   const handleReply = () => {
     if (!responseMessage.trim()) {
-      alert('Please enter a reply message');
+      // alert('Please enter a reply message');
       return;
     }
-    alert(`Reply sent: "${responseMessage}"`);
+    // alert(`Reply sent: "${responseMessage}"`);
     setResponseMessage('');
     setIsDetailModalVisible(false);
   };
 
   const handleFollowBack = () => {
-    alert(`You are now following ${selectedNotification.detailData.username}`);
+    // alert(`You are now following ${selectedNotification.detailData.username}`);
     setIsDetailModalVisible(false);
   };
 
@@ -1265,7 +1266,7 @@ const Notifications = () => {
               style={styles.saveSettingsButton}
               onPress={() => {
                 setShowSettings(false);
-                alert('Settings saved successfully!');
+                // alert('Settings saved successfully!');
               }}
             >
               <Text style={styles.saveSettingsButtonText}>Save Settings</Text>
@@ -1301,9 +1302,9 @@ const Notifications = () => {
       </View>
     </Modal>
   );
-
+  const { top } = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: top }]}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
       <View
         style={[

@@ -206,11 +206,11 @@ const Privacy = () => {
   };
 
   const handleAgree = () => {
-    if (!agreeChecked) {
-      alert('Please acknowledge that you have read the Privacy Policy');
-      return;
-    }
-    alert('Privacy policy acknowledged');
+    // if (!agreeChecked) {
+    //   // alert('Please acknowledge that you have read the Privacy Policy');
+    //   return;
+    // }
+    // alert('Privacy policy acknowledged');
   };
 
   const handleDecline = () => {
